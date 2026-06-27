@@ -8,14 +8,14 @@
 
   const defaultData = {
     settings: {
-      invitationTitle: '3 Bulanan / Telung Oton Kaivan',
-      eventTitle: 'Upacara 3 Bulanan / Telung Oton',
+      invitationTitle: '3 Bulanan / Telung Sasih Kaivan',
+      eventTitle: 'Upacara 3 Bulanan / Telung Sasih',
       childName: 'Kaivan',
       subheader: 'Putra dari Pasangan Jodie & Citra',
       fatherName: 'Jodie',
       motherName: 'Citra',
-      eventDate: '2026-07-20',
-      eventTime: '10:00',
+      eventDate: '2026-07-05',
+      eventTime: '15:00',
       timezoneLabel: 'WITA',
       locationName: 'Kediaman Keluarga Besar',
       address: 'Silakan ubah alamat acara pada halaman admin.',
