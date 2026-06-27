@@ -5,9 +5,9 @@
 // 4) Ubah enabled menjadi true.
 
 window.SUPABASE_CONFIG = {
-  enabled: false,
-  url: "PASTE_SUPABASE_PROJECT_URL_HERE",
-  anonKey: "PASTE_SUPABASE_ANON_KEY_HERE",
+  enabled: true,
+  url: "https://eycwectpwbmvmisxbxkl.supabase.co",
+  anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Y3dlY3Rwd2Jtdm1pc3hieGtsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzNjE0NTgsImV4cCI6MjA5NjkzNzQ1OH0.N0b4xPJPFemHAegksAGLPiYzW_V0IwZY5VH3PRLTQMs",
   dataTable: "app_data",
   dataId: "main",
   storageBucket: "kaivan-media"
