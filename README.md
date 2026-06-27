@@ -1,6 +1,6 @@
-# 3 Bulanan / Telung Oton Kaivan
+# 3 Bulanan / Telung Sasih Kaivan
 
-Web undangan online tema Bali hitam–emas untuk acara **3 Bulanan / Telung Oton Kaivan**.
+Web undangan online tema Bali hitam–emas untuk acara **3 Bulanan / Telung Sasih Kaivan**.
 
 ## Fitur
 
