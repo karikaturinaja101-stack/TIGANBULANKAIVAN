@@ -1,5 +1,5 @@
 (function () {
-  const STORAGE_KEY = 'telung_oton_kaivan_v2';
+  const STORAGE_KEY = 'telung_oton_kaivan_v3';
   const LEGACY_STORAGE_KEY = 'telung_oton_kaivan_v1';
   const SESSION_KEY = 'telung_oton_admin_session';
 
@@ -8,21 +8,21 @@
 
   const defaultData = {
     settings: {
-      invitationTitle: '3 Bulanan / Telung Sasih Kaivan',
-      eventTitle: 'Upacara 3 Bulanan / Telung Sasih',
+      invitationTitle: 'Undangan Upacara 3 Bulanan / Tigang Sasih',
+      eventTitle: 'Upacara 3 Bulanan / Tigang Sasih',
       childName: 'Kaivan',
-      subheader: 'Putra dari Pasangan Jodie & Citra',
+      subheader: 'Kaivan — Putra dari Pasangan Jodie & Citra',
       fatherName: 'Jodie',
       motherName: 'Citra',
-      eventDate: '2026-07-05',
-      eventTime: '15:00',
+      eventDate: '2026-07-20',
+      eventTime: '10:00',
       timezoneLabel: 'WITA',
       locationName: 'Kediaman Keluarga Besar',
       address: 'Silakan ubah alamat acara pada halaman admin.',
       mapsUrl: 'https://maps.google.com',
       mapsEmbedUrl: '',
       whatsappNumber: '',
-      openingText: 'Atas asung kertha wara nugraha Ida Sang Hyang Widhi Wasa, dengan penuh rasa syukur kami mengundang Bapak/Ibu/Saudara/i untuk hadir dalam acara 3 Bulanan / Telung Oton putra kami.',
+      openingText: 'Atas asung kertha wara nugraha Ida Sang Hyang Widhi Wasa, dengan penuh rasa syukur kami mengundang Bapak/Ibu/Saudara/i untuk hadir dalam Upacara 3 Bulanan / Tigang Sasih putra kami.',
       closingText: 'Merupakan kebahagiaan dan kehormatan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.',
       mainPhoto: '',
       musicUrl: '',
@@ -117,12 +117,31 @@
   }
 
   function saveLocal(data) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      return true;
+    } catch (error) {
+      lastSyncStatus = 'local-storage-full';
+      console.warn('Penyimpanan lokal penuh. Aktifkan Supabase untuk menyimpan media ukuran besar:', error);
+      return false;
+    }
   }
 
   function mergeDefaults(data, shouldSave = true) {
     const merged = deepClone(defaultData);
     merged.settings = { ...merged.settings, ...(data.settings || {}) };
+    // Migrasi otomatis dari judul lama agar index dan admin selalu selaras dengan nama acara terbaru.
+    const oldTitles = ['3 Bulanan / Telung Oton Kaivan', '3 Bulanan/Telung Oton Kaivan'];
+    const oldEvents = ['Upacara 3 Bulanan / Telung Oton', '3 Bulanan / Telung Oton Kaivan'];
+    if (!merged.settings.invitationTitle || oldTitles.includes(merged.settings.invitationTitle)) {
+      merged.settings.invitationTitle = defaultData.settings.invitationTitle;
+    }
+    if (!merged.settings.eventTitle || oldEvents.includes(merged.settings.eventTitle)) {
+      merged.settings.eventTitle = defaultData.settings.eventTitle;
+    }
+    if (!merged.settings.subheader || merged.settings.subheader === 'Putra dari Pasangan Jodie & Citra') {
+      merged.settings.subheader = defaultData.settings.subheader;
+    }
     merged.guests = Array.isArray(data.guests) ? data.guests : merged.guests;
     merged.gallery = Array.isArray(data.gallery) && data.gallery.length ? data.gallery : merged.gallery;
     merged.rsvps = Array.isArray(data.rsvps) ? data.rsvps : [];
@@ -291,9 +310,9 @@
   }
 
   async function compressImageForLocal(file, options = {}) {
-    const maxWidth = options.maxWidth || 1400;
-    const maxHeight = options.maxHeight || 1400;
-    const targetBytes = options.targetBytes || 420 * 1024;
+    const maxWidth = options.maxWidth || 1200;
+    const maxHeight = options.maxHeight || 1200;
+    const targetBytes = options.targetBytes || 190 * 1024;
 
     const originalDataUrl = await readFileAsDataURL(file);
     if (file.size <= targetBytes) return originalDataUrl;
@@ -360,8 +379,12 @@
     }
 
     if (file.type && file.type.startsWith('image/')) {
-      // Mode lokal memakai localStorage. Foto otomatis dikompresi agar 8 foto galeri tetap bisa disimpan.
+      // Mode lokal memakai localStorage. Foto otomatis dikompresi agar 8 foto galeri tetap aman di HP/PC.
       return compressImageForLocal(file);
+    }
+
+    if (file.type && file.type.startsWith('audio/') && !client && file.size > 3 * 1024 * 1024) {
+      throw new Error('Mode lokal hanya cocok untuk lagu kecil maksimal 3 MB. Untuk lagu ukuran besar, aktifkan Supabase atau tempel link lagu.');
     }
 
     const maxBytes = maxSizeMb * 1024 * 1024;

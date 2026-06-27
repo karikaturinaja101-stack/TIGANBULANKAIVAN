@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Admin - 3 Bulanan / Telung Sasih Kaivan</title>
+  <title>Admin - Undangan Upacara 3 Bulanan / Tigang Sasih</title>
   <meta name="theme-color" content="#080603" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body class="admin-body">
@@ -15,7 +15,7 @@
     <div class="login-card card">
       <div class="section-kicker">Admin Panel</div>
       <h1 class="admin-title">Kelola Undangan</h1>
-      <p class="help">Login awal: <strong>admin</strong> / <strong>admin123</strong>. Silakan ganti username dan password pada menu Backup & Akun.</p>
+      <p class="admin-note">Login awal: <strong>admin</strong> / <strong>admin123</strong></p>
       <form id="loginForm" class="form-grid">
         <div class="field"><label>Username</label><input class="input" id="loginUser" required autocomplete="username" /></div>
         <div class="field"><label>Password</label><input class="input" id="loginPass" type="password" required autocomplete="current-password" /></div>
@@ -26,7 +26,7 @@
 
   <div class="admin-shell hidden" id="adminShell">
     <aside class="sidebar">
-      <div class="brand">Telung Oton<br>Kaivan</div>
+      <div class="brand">Tigang Sasih<br>Kaivan</div>
       <nav class="admin-nav" id="adminNav">
         <button class="nav-btn active" data-section="dashboard">Dashboard</button>
         <button class="nav-btn" data-section="acara">Acara</button>
@@ -56,12 +56,13 @@
         <div class="stats-grid" id="statsGrid"></div>
         <div class="admin-card card">
           <h2 class="section-title" style="font-size:2rem">Ringkasan</h2>
-          <p class="lead">Semua data undangan, foto, galeri, lagu, daftar tamu, RSVP, dan ucapan dapat diganti dari panel ini. Untuk versi tanpa server, data tersimpan di browser/perangkat admin.</p>
+          <p class="lead">Semua isi undangan bisa diganti langsung dari menu admin. Pada mode Supabase, perubahan tersimpan online dan tampil di semua perangkat.</p>
           <div class="cta-row">
             <button class="btn small" data-jump="acara">Edit Acara</button>
             <button class="btn secondary small" data-jump="foto">Ganti Foto</button>
             <button class="btn secondary small" data-jump="musik">Ganti Musik</button>
             <button class="btn secondary small" data-jump="tamu">Kelola Tamu</button>
+            <button class="btn ghost small" id="syncNowBtn" type="button">Simpan Online</button>
           </div>
         </div>
       </section>
@@ -99,9 +100,12 @@
           <div class="admin-grid">
             <div class="preview-box" id="mainPhotoPreview">Belum ada foto utama</div>
             <div class="form-grid">
-              <div class="field"><label>Upload Foto Utama</label><input class="input" id="mainPhotoInput" type="file" accept="image/*" /></div>
-              <p class="help">Rekomendasi foto portrait rasio 4:5 atau 3:4. Ukuran maksimal 4 MB untuk versi lokal.</p>
-              <button class="btn secondary" id="clearMainPhoto" type="button">Hapus Foto Utama</button>
+              <div class="field"><label>Upload / Ganti Foto Utama</label><input class="input" id="mainPhotoInput" type="file" accept="image/*" /></div>
+              <div class="field"><label>Link Foto Utama</label><input class="input" id="mainPhotoUrl" placeholder="Tempel URL foto jika tidak upload file" /></div>
+              <div class="cta-row">
+                <button class="btn" id="saveMainPhotoUrl" type="button">Simpan Link Foto</button>
+                <button class="btn secondary" id="clearMainPhoto" type="button">Hapus Foto Utama</button>
+              </div>
             </div>
           </div>
         </div>
@@ -110,11 +114,11 @@
       <section class="admin-section" id="section-galeri">
         <div class="admin-card card">
           <h2 class="section-title" style="font-size:2rem">Galeri 8 Foto</h2>
-          <p class="help">Sekarang galeri bisa mengganti semua 8 foto. Gunakan upload satu per satu, atau pilih 8 foto sekaligus melalui tombol di bawah.</p>
+          
           <div class="bulk-upload-box">
             <div>
               <strong>Upload 8 Foto Sekaligus</strong>
-              <p class="help">Urutan file yang dipilih akan menjadi Foto 1 sampai Foto 8. Di mode Supabase, foto masuk ke Storage. Di mode lokal, foto otomatis dikompresi agar muat.</p>
+              
             </div>
             <label class="btn secondary" for="galleryBulkInput">Pilih Banyak Foto</label>
             <input class="hidden" id="galleryBulkInput" type="file" accept="image/*" multiple />
@@ -130,12 +134,13 @@
           <h2 class="section-title" style="font-size:2rem">Pengaturan Musik</h2>
           <div class="admin-grid">
             <div class="field"><label>Status Musik</label><select class="select" name="musicEnabled"><option value="true">Aktif</option><option value="false">Nonaktif</option></select></div>
-            <div class="field"><label>Judul Musik</label><input class="input" name="musicTitle" /></div>
+            <div class="field"><label>Judul Musik</label><input class="input" name="musicTitle" placeholder="Contoh: Gamelan Bali Lembut" /></div>
             <div class="field"><label>Volume Default</label><input class="input" name="musicVolume" type="range" min="0" max="1" step="0.05" /></div>
-            <div class="field"><label>Upload Lagu MP3/OGG</label><input class="input" id="musicInput" type="file" accept="audio/mp3,audio/mpeg,audio/ogg,audio/wav" /></div>
+            <div class="field"><label>Upload / Ganti Lagu</label><input class="input" id="musicInput" type="file" accept="audio/mp3,audio/mpeg,audio/ogg,audio/wav" /></div>
+            <div class="field admin-grid-span"><label>Link Lagu</label><input class="input" name="musicUrl" placeholder="Tempel URL musik jika tidak upload file" /></div>
           </div>
           <audio id="musicPreview" controls style="width:100%"></audio>
-          <p class="help">Browser biasanya baru memperbolehkan musik berjalan setelah tamu menekan tombol “Buka Undangan”.</p>
+          
           <div class="cta-row">
             <button class="btn" type="submit">Simpan Musik</button>
             <button class="btn secondary" id="clearMusic" type="button">Hapus Musik</button>
@@ -154,7 +159,7 @@
             </form>
             <div class="form-grid">
               <div class="field"><label>Import CSV</label><input class="input" id="guestCsvInput" type="file" accept=".csv,text/csv" /></div>
-              <p class="help">Format CSV: <strong>nama,whatsapp</strong>. Kolom WhatsApp boleh kosong. Contoh file sudah disertakan.</p>
+              
               <button class="btn secondary" id="exportGuests" type="button">Export Daftar Tamu CSV</button>
             </div>
           </div>
@@ -180,7 +185,7 @@
             <div class="field"><label>Warna Emas</label><input class="input" name="goldColor" type="color" /></div>
             <div class="field"><label>Warna Hitam</label><input class="input" name="blackColor" type="color" /></div>
             <div class="field"><label>Detail Wayang Bali Emas</label><select class="select" name="showOrnaments"><option value="true">Aktif</option><option value="false">Nonaktif</option></select></div>
-            <div class="field"><label>Bingkai Vintage Bali</label><select class="select" name="showFrame"><option value="true">Aktif</option><option value="false">Nonaktif</option></select></div>
+            <div class="field"><label>Border Emas Foto Utama</label><select class="select" name="showFrame"><option value="true">Aktif</option><option value="false">Nonaktif</option></select></div>
           </div>
           <button class="btn" type="submit">Simpan Tema</button>
         </form>
@@ -189,7 +194,7 @@
       <section class="admin-section" id="section-backup">
         <div class="admin-card card form-grid">
           <h2 class="section-title" style="font-size:2rem">Backup Data</h2>
-          <p class="help">Gunakan export/import JSON untuk memindahkan pengaturan antar browser/perangkat pada versi lokal.</p>
+          <p class="admin-note">Backup JSON hanya diperlukan untuk mode lokal. Jika Supabase aktif, data tersimpan online.</p>
           <div class="cta-row">
             <button class="btn" id="exportJson" type="button">Export Backup JSON</button>
             <label class="btn secondary" for="importJson">Import Backup JSON</label>

@@ -74,6 +74,7 @@
     $('accountForm').addEventListener('submit', saveAccount);
 
     $('mainPhotoInput').addEventListener('change', uploadMainPhoto);
+    if ($('saveMainPhotoUrl')) $('saveMainPhotoUrl').addEventListener('click', saveMainPhotoUrl);
     $('clearMainPhoto').addEventListener('click', clearMainPhoto);
     $('musicInput').addEventListener('change', uploadMusic);
     $('clearMusic').addEventListener('click', clearMusic);
@@ -86,6 +87,7 @@
     $('exportJson').addEventListener('click', exportJson);
     $('importJson').addEventListener('change', importJson);
     $('resetAll').addEventListener('click', resetAll);
+    if ($('syncNowBtn')) $('syncNowBtn').addEventListener('click', syncNowManual);
   }
 
   function ensureEightGallerySlots() {
@@ -155,8 +157,9 @@
 
   function renderMainPhotoPreview() {
     const preview = $('mainPhotoPreview');
+    if ($('mainPhotoUrl')) $('mainPhotoUrl').value = data.settings.mainPhoto || '';
     if (data.settings.mainPhoto) preview.innerHTML = `<img src="${data.settings.mainPhoto}" alt="Foto utama" />`;
-    else preview.textContent = 'Belum ada foto utama';
+    else preview.innerHTML = '<span>Belum ada foto utama</span>';
   }
 
   async function uploadMainPhoto(event) {
@@ -176,11 +179,18 @@
   }
 
   function clearMainPhoto() {
-    if (!confirm('Hapus foto utama?')) return;
     data.settings.mainPhoto = '';
     Store.saveData(data);
     renderMainPhotoPreview();
     showToast('Foto utama dihapus.');
+  }
+
+  function saveMainPhotoUrl() {
+    const url = $('mainPhotoUrl')?.value.trim() || '';
+    data.settings.mainPhoto = url;
+    Store.saveData(data);
+    renderMainPhotoPreview();
+    showToast(url ? 'Link foto utama berhasil disimpan.' : 'Foto utama dikosongkan.');
   }
 
   function renderGalleryAdmin() {
@@ -279,6 +289,7 @@
     form.elements.musicEnabled.value = String(data.settings.musicEnabled);
     form.elements.musicTitle.value = data.settings.musicTitle || '';
     form.elements.musicVolume.value = String(data.settings.musicVolume ?? 0.35);
+    if (form.elements.musicUrl) form.elements.musicUrl.value = data.settings.musicUrl || '';
     const preview = $('musicPreview');
     if (data.settings.musicUrl) {
       preview.src = data.settings.musicUrl;
@@ -311,13 +322,13 @@
     data.settings.musicEnabled = form.elements.musicEnabled.value === 'true';
     data.settings.musicTitle = form.elements.musicTitle.value.trim();
     data.settings.musicVolume = Number(form.elements.musicVolume.value || 0.35);
+    if (form.elements.musicUrl) data.settings.musicUrl = form.elements.musicUrl.value.trim();
     Store.saveData(data);
     fillMusicForm();
     showToast('Pengaturan musik berhasil disimpan.');
   }
 
   function clearMusic() {
-    if (!confirm('Hapus file musik?')) return;
     data.settings.musicUrl = '';
     Store.saveData(data);
     fillMusicForm();
@@ -370,11 +381,21 @@
 
   async function copyGuestLink(event) {
     const link = invitationLink(event.currentTarget.dataset.slug);
+    const temp = document.createElement('textarea');
+    temp.value = link;
+    temp.setAttribute('readonly', '');
+    temp.style.position = 'fixed';
+    temp.style.left = '-9999px';
+    document.body.appendChild(temp);
+    temp.select();
     try {
-      await navigator.clipboard.writeText(link);
+      if (navigator.clipboard && window.isSecureContext) await navigator.clipboard.writeText(link);
+      else document.execCommand('copy');
       showToast('Link undangan berhasil dicopy.');
     } catch (_) {
-      prompt('Copy link undangan:', link);
+      showToast('Link belum bisa dicopy otomatis. Buka lewat kolom link personal.');
+    } finally {
+      temp.remove();
     }
   }
 
@@ -394,7 +415,6 @@
 
   function deleteGuest(event) {
     const id = event.currentTarget.dataset.id;
-    if (!confirm('Hapus tamu ini?')) return;
     data.guests = data.guests.filter((g) => g.id !== id);
     Store.saveData(data);
     renderAll();
@@ -443,7 +463,6 @@
   }
 
   function deleteRsvp(event) {
-    if (!confirm('Hapus RSVP/ucapan ini?')) return;
     data.rsvps = data.rsvps.filter((item) => item.id !== event.currentTarget.dataset.id);
     Store.saveData(data);
     renderAll();
@@ -456,7 +475,6 @@
   }
 
   function clearRsvp() {
-    if (!confirm('Hapus semua RSVP dan ucapan?')) return;
     data.rsvps = [];
     Store.saveData(data);
     renderAll();
@@ -521,10 +539,17 @@
   }
 
   function resetAll() {
-    if (!confirm('Reset semua data ke default? Tindakan ini tidak dapat dibatalkan kecuali Anda punya backup JSON.')) return;
     data = Store.resetData();
     renderAll();
     showToast('Semua data direset.');
+  }
+
+
+  async function syncNowManual() {
+    const result = await Store.syncNow();
+    if (result.ok) showToast('Perubahan berhasil disimpan online.');
+    else showToast(result.mode === 'local' ? 'Supabase belum aktif, data tersimpan lokal.' : 'Gagal sinkron online. Cek koneksi/Supabase.');
+    renderStats();
   }
 
   function showToast(message) {

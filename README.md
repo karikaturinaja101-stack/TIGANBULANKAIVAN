@@ -1,61 +1,52 @@
-# 3 Bulanan / Telung Sasih Kaivan
+# Undangan Undangan Upacara 3 Bulanan / Tigang Sasih
 
-Web undangan online tema Bali hitam–emas untuk acara **3 Bulanan / Telung Sasih Kaivan**.
+Versi ini sudah disiapkan untuk mode lokal dan mode online Supabase.
 
 ## Fitur
+- Halaman undangan tema Bali hitam-emas.
+- Nama tamu personal dari database.
+- Foto utama dengan border emas tipis.
+- Countdown acara.
+- RSVP dan ucapan/doa tamu.
+- Galeri 8 foto dengan slider otomatis.
+- Musik dapat diganti dari admin melalui upload file atau link lagu.
+- Admin panel sederhana untuk mengubah acara, foto, galeri, musik, tamu, RSVP, tema, dan akun admin.
+- Mode Supabase untuk menyimpan data, foto, galeri, dan musik secara online.
 
-- Halaman pembuka personal sesuai nama tamu
-- Foto utama dengan border emas tipis
-- Countdown acara
-- Lokasi Google Maps
-- RSVP kehadiran
-- Ucapan dan doa tamu
-- Galeri 8 foto dengan auto-slide
-- Musik yang bisa diganti dari admin
-- Admin panel sederhana
-- Import/export tamu CSV
-- Backup JSON
-- Siap Supabase untuk database dan upload foto/musik online
+## Login Admin Awal
+- Username: `admin`
+- Password: `admin123`
 
-## Cara coba lokal
+Setelah masuk, ubah akun admin di menu **Backup & Akun**.
 
-1. Extract ZIP.
-2. Buka `index.html` untuk melihat undangan.
-3. Buka `admin.html` untuk mengatur data.
-4. Login awal:
-   - Username: `admin`
-   - Password: `admin123`
+## Cara Edit Setelah Hosting
+1. Buka link web yang sudah dihosting.
+2. Tambahkan `/admin.html` di belakang domain.
+   Contoh: `https://domain-anda.com/admin.html`
+3. Login admin.
+4. Pilih menu yang ingin diubah:
+   - **Acara** untuk nama, tanggal, lokasi, maps, countdown.
+   - **Foto Utama** untuk mengganti foto utama.
+   - **Galeri** untuk mengganti 8 foto slider.
+   - **Musik** untuk upload/ganti lagu atau menempel link lagu.
+   - **Daftar Tamu** untuk membuat link undangan personal.
+   - **RSVP & Ucapan** untuk melihat data kehadiran dan doa.
+   - **Tema** untuk warna dan ornamen.
+5. Klik tombol simpan pada menu tersebut.
+6. Jika Supabase aktif, perubahan otomatis tersimpan online. Tombol **Simpan Online** di Dashboard bisa digunakan untuk memaksa sinkronisasi.
 
-## Cara aktifkan Supabase
-
-1. Buka Supabase dan buat project.
+## Cara Aktifkan Supabase
+1. Buat project di Supabase.
 2. Buka **SQL Editor**.
-3. Jalankan file `supabase/schema.sql`.
+3. Jalankan isi file `supabase/schema.sql`.
 4. Buka file `supabase/config.js`.
 5. Isi:
-   - `enabled: true`
    - `url`
    - `anonKey`
-6. Upload folder web ke Vercel/Netlify/hosting biasa.
+   - ubah `enabled` menjadi `true`
+6. Upload semua file web ke Vercel, Netlify, Cloudflare Pages, atau hosting biasa.
 
-Panduan lengkap ada di:
-
-`supabase/PANDUAN_SUPABASE.md`
-
-## Catatan penting
-
-Supabase digunakan untuk:
-- database undangan
-- RSVP
-- daftar tamu
-- ucapan/doa
-- upload foto utama
-- upload galeri
-- upload musik
-
-Halaman web tetap bisa dihosting di Vercel, Netlify, Cloudflare Pages, atau hosting biasa.
-
-
-## Revisi Upload Galeri
-
-Menu Galeri di admin sudah mendukung penggantian 8 foto. Bisa upload satu per satu atau memakai tombol **Upload 8 Foto Sekaligus**. Untuk hasil terbaik gunakan Supabase agar foto tersimpan di Storage dan sinkron di semua perangkat.
+## Catatan Penting
+- Jika Supabase belum aktif, data hanya tersimpan pada browser/perangkat admin.
+- Jika Supabase aktif, perubahan yang dilakukan di `admin.html` akan tampil di semua perangkat.
+- Musik pada browser modern biasanya akan mulai setelah tamu menekan tombol **Buka Undangan**.

@@ -31,8 +31,9 @@
     document.documentElement.style.setProperty('--gold', settings.goldColor || '#d8b45a');
     document.documentElement.style.setProperty('--gold-soft', lightenGold(settings.goldColor || '#d8b45a'));
     document.documentElement.style.setProperty('--black', settings.blackColor || '#080603');
+    document.documentElement.style.setProperty('--font-display', '"Cinzel", "Cormorant Garamond", Georgia, serif');
     document.documentElement.style.setProperty('--font-title', '"Cormorant Garamond", Georgia, serif');
-    document.documentElement.style.setProperty('--font-body', '"Plus Jakarta Sans", "Segoe UI", sans-serif');
+    document.documentElement.style.setProperty('--font-body', '"Manrope", "Segoe UI", system-ui, sans-serif');
     document.querySelectorAll('.bali-ornament, .wayang-mark').forEach((el) => {
       el.classList.toggle('hidden', !settings.showOrnaments);
     });
