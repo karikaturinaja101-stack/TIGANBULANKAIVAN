@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>3 Bulanan / Telung Oton Kaivan</title>
+  <meta name="description" content="Undangan online 3 Bulanan / Telung Oton Kaivan, putra dari pasangan Jodie & Citra." />
+  <meta property="og:title" content="3 Bulanan / Telung Oton Kaivan" />
+  <meta property="og:description" content="Putra dari Pasangan Jodie & Citra" />
+  <meta name="theme-color" content="#080603" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <audio id="bgMusic" loop preload="auto"></audio>
+  <button id="musicToggle" class="floating-audio hidden" aria-label="Putar atau hentikan musik">♪</button>
+
+  <main>
+    <section class="cover" id="cover">
+      <div class="cover-card card">
+        <img class="bali-ornament orn-tl" src="assets/images/wayang-gold-small.png" alt="Ornamen wayang Bali emas" loading="eager" decoding="async" />
+        <img class="bali-ornament orn-tr mirror-x" src="assets/images/wayang-gold-small.png" alt="" aria-hidden="true" loading="eager" decoding="async" />
+        <img class="bali-ornament orn-bl mirror-y" src="assets/images/wayang-gold-small.png" alt="" aria-hidden="true" loading="eager" decoding="async" />
+        <img class="bali-ornament orn-br mirror-xy" src="assets/images/wayang-gold-small.png" alt="" aria-hidden="true" loading="eager" decoding="async" />
+        <img class="wayang-mark" src="assets/images/wayang-gold-small.png" alt="Detail wayang Bali emas" loading="eager" decoding="async" />
+        <div class="om">Om Swastiastu</div>
+        <p class="to-label">Kepada Yth.</p>
+        <h1 class="guest-name" id="guestName">Bapak/Ibu/Saudara/i</h1>
+        <h2 class="cover-title" id="coverTitle">3 Bulanan / Telung Oton Kaivan</h2>
+        <p class="cover-subtitle" id="coverSubtitle">Putra dari Pasangan Jodie & Citra</p>
+        <button class="btn" id="openInvitation">Buka Undangan</button>
+      </div>
+    </section>
+
+    <section class="page-section" id="utama">
+      <div class="container hero-grid">
+        <div class="photo-frame" id="mainPhotoFrame">
+          <div class="main-photo" id="mainPhotoBox">
+            <div>Upload foto utama melalui <strong>admin.html</strong></div>
+          </div>
+        </div>
+        <div>
+          <div class="section-kicker">Undangan Acara</div>
+          <h2 class="hero-title" id="heroChildName">Kaivan</h2>
+          <p class="hero-sub" id="openingText"></p>
+          <div class="detail-list">
+            <div class="detail-item"><span>Acara</span><strong id="detailEventTitle"></strong></div>
+            <div class="detail-item"><span>Tanggal</span><strong id="detailDate"></strong></div>
+            <div class="detail-item"><span>Waktu</span><strong id="detailTime"></strong></div>
+            <div class="detail-item"><span>Tempat</span><strong id="detailLocation"></strong></div>
+          </div>
+          <div id="countdownCard" class="countdown-card card">
+            <div class="section-kicker">Menuju Hari Bahagia</div>
+            <div class="countdown-grid">
+              <div class="countdown-box"><div class="countdown-num" id="cdDays">00</div><div class="countdown-label">Hari</div></div>
+              <div class="countdown-box"><div class="countdown-num" id="cdHours">00</div><div class="countdown-label">Jam</div></div>
+              <div class="countdown-box"><div class="countdown-num" id="cdMinutes">00</div><div class="countdown-label">Menit</div></div>
+              <div class="countdown-box"><div class="countdown-num" id="cdSeconds">00</div><div class="countdown-label">Detik</div></div>
+            </div>
+          </div>
+          <div class="cta-row">
+            <button class="btn" id="openMapBtn">Lihat Lokasi</button>
+            <a class="btn secondary" href="#rsvp">Konfirmasi Kehadiran</a>
+            <button class="btn secondary" id="openGalleryBtn">Lihat Galeri</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section" id="lokasi">
+      <div class="container location-rsvp-grid">
+        <div>
+          <div class="section-kicker">Lokasi Acara</div>
+          <h2 class="section-title">Tempat Upacara</h2>
+          <p class="lead" id="addressText"></p>
+          <div class="cta-row">
+            <a class="btn" id="mapsExternal" target="_blank" rel="noopener">Buka Google Maps</a>
+            <a class="btn secondary hidden" id="whatsappBtn" target="_blank" rel="noopener">Konfirmasi via WhatsApp</a>
+          </div>
+        </div>
+        <div class="map-preview" id="mapPreview"></div>
+      </div>
+    </section>
+
+    <section class="page-section" id="rsvp">
+      <div class="container location-rsvp-grid">
+        <div class="rsvp-form card">
+          <div class="section-kicker">RSVP & Doa</div>
+          <h2 class="section-title" style="font-size: clamp(2rem, 4vw, 3.2rem);">Konfirmasi Kehadiran</h2>
+          <form id="rsvpForm" class="form-grid">
+            <div class="field">
+              <label for="rsvpName">Nama</label>
+              <input class="input" id="rsvpName" required />
+            </div>
+            <div class="field">
+              <label>Apakah berkenan hadir?</label>
+              <div class="radio-row">
+                <label class="radio-card"><input type="radio" name="attendance" value="Hadir" checked /> Hadir</label>
+                <label class="radio-card"><input type="radio" name="attendance" value="Tidak Hadir" /> Tidak Hadir</label>
+                <label class="radio-card"><input type="radio" name="attendance" value="Masih Ragu" /> Masih Ragu</label>
+              </div>
+            </div>
+            <div class="field">
+              <label for="guestCount">Jumlah Tamu</label>
+              <input class="input" id="guestCount" type="number" min="0" max="20" value="1" />
+            </div>
+            <div class="field">
+              <label for="wishMessage">Ucapan dan Doa</label>
+              <textarea class="textarea" id="wishMessage" placeholder="Tuliskan ucapan dan doa terbaik..." required></textarea>
+            </div>
+            <button class="btn" type="submit">Kirim Doa & Konfirmasi</button>
+          </form>
+        </div>
+        <div>
+          <div class="section-kicker">Ucapan Tamu</div>
+          <h2 class="section-title" style="font-size: clamp(2rem, 4vw, 3.2rem);">Doa Terbaik</h2>
+          <div class="wishes-list" id="wishesList"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section" id="galeri">
+      <div class="container center">
+        <div class="section-kicker">Galeri Kenangan</div>
+        <h2 class="section-title">Kenangan Sang Buah Hati</h2>
+        <p class="lead center">Delapan foto kenangan dapat diganti melalui admin panel. Slider galeri akan bergerak otomatis agar tampil lebih estetik di HP maupun web.</p>
+        <div class="gallery-strip" id="galleryStrip"></div>
+        <div class="cta-row" style="justify-content:center;"><button class="btn" id="openGalleryBtn2">Buka Galeri Slider</button></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p id="closingText"></p>
+      <strong>Om Santih, Santih, Santih Om</strong>
+    </div>
+  </footer>
+
+  <div class="modal" id="mapModal" aria-hidden="true">
+    <div class="modal-card card">
+      <button class="modal-close" data-close="mapModal">×</button>
+      <div class="section-kicker">Popup Maps</div>
+      <h2 class="section-title" style="font-size:2.4rem">Lokasi Acara</h2>
+      <div class="map-preview" id="mapModalContent"></div>
+      <div class="cta-row"><a class="btn" id="mapsExternalModal" target="_blank" rel="noopener">Buka Google Maps</a></div>
+    </div>
+  </div>
+
+  <div class="modal" id="galleryModal" aria-hidden="true">
+    <div class="modal-card card gallery-modal-card">
+      <button class="modal-close" data-close="galleryModal">×</button>
+      <div class="section-kicker">Popup Galeri</div>
+      <h2 class="section-title" style="font-size:2.4rem">Kenangan Kaivan</h2>
+      <p class="modal-subtle">Galeri bergerak otomatis. Geser di layar HP atau gunakan tombol navigasi.</p>
+      <div class="slider-frame" id="sliderFrame"></div>
+      <div class="slider-controls">
+        <button class="btn secondary small" id="prevSlide">Sebelumnya</button>
+        <div class="dots" id="sliderDots"></div>
+        <button class="btn secondary small" id="nextSlide">Berikutnya</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase/config.js"></script>
+  <script src="assets/js/storage.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
